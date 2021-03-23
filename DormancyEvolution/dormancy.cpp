@@ -242,7 +242,7 @@ void survival(int rr, int gg) {
 
 void outPara(void)
 {
-	string name = "Sim" + Int2Str(SimNr) + "_Para.txt";
+	string name = dirOut + "Sim" + Int2Str(SimNr) + "_Para.txt";
 
 	para.open(name.c_str());
 
@@ -280,7 +280,7 @@ void outPara(void)
 void outPop_header(void) {
 	string name;
 
-	name = "Sim" + Int2Str(SimNr) + "_Pop.txt";
+	name = dirOut + "Sim" + Int2Str(SimNr) + "_Pop.txt";
 
 	pop.open(name.c_str());
 
