@@ -107,10 +107,11 @@ const string Float2Str(const double x)
 void Initialise(void) {
 
 	eps = 0.0;
-
-	for (int i = 0; i < (int)K; i++) {
-		land[init_x][init_y].inds.push_back(Individual(init_dorm, init_x, init_y));
-		land[init_x][init_y].N++;
+	for (int y = 0; y < y_max; y++) {
+		for (int i = 0; i < (int)K; i++) {
+			land[0][y].inds.push_back(Individual(init_dorm, init_x, init_y));
+			land[0][y].N++;
+		}
 	}
 }
 //---------------------------------------------------------------------------

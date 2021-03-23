@@ -25,7 +25,7 @@
 
 using namespace std;
 
-const int x_max = 200;
+const int x_max = 400;
 const int y_max = 50;
 const int x_max0 = 50;
 
@@ -40,7 +40,7 @@ int expansion_start = 0; //before expansions start dispersal is restricted in 50
 int out_interval = 5;
 int init_x = 2;
 int init_y = 25;
-double K = 5.0; //carrying capacity
+double K = 25.0; //carrying capacity
 int s = 5; //nr. seeds per plant
 int gam = 10; //max. nr. of seeds per plant
 double d = 0.1; //dispersal probaibility
