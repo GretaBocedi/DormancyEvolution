@@ -52,7 +52,8 @@ void RunModel(void) {
 
 	int p;
 
-	outPop_header(d);
+	outPara();
+	outPop_header();
 
 	for (int r = 0; r < replicates; r++) {
 		cout << "------------------------------" << endl;
@@ -118,7 +119,7 @@ void env_stoch(void)
 	eps = eps * env_ac + normEnv(rdgen) * sqrt(1.0 - env_ac*env_ac);
 	fec = s * (1.0 + eps);
 	if (fec < 0.0) fec = 0.0;
-	if (fec > gamma) fec = gamma;
+	if (fec > gam) fec = gam;
 }
 //---------------------------------------------------------------------------
 //Reproduction
@@ -239,8 +240,44 @@ void survival(int rr, int gg) {
 
 }
 
+void outPara(void)
+{
+	string name = "Sim" + Int2Str(SimNr) + "_Para.txt";
+
+	para.open(name.c_str());
+
+	para << "SimNr\t" << SimNr << endl;
+	para << "replicates" << replicates << endl;
+	para << "genertations" << years << endl;
+	para << "x_max\t" << x_max << endl;
+	para << "y_max\t" << y_max << endl;
+	para << "x_max0\t" << x_max0 << endl;
+
+	para << "dormancy_evolution\t" << dorm_evol << endl;
+	para << "Allee_effect\t" << Allee << endl;
+	para << "Env_stochasticity\t" << stochasticity << endl;
+
+	para << "initital_x\t" << init_x << endl;
+	para << "initital_y\t" << init_y << endl;
+	para << "expansion_start\t" << expansion_start << endl;
+
+	para << "K\t" << K << endl;
+	para << "fecundity_s\t" << s << endl;
+	para << "max_fecundity_gamma\t" << gam << endl;
+	para << "disp_probability\t" << d << endl;
+	para << "mortality_m\t" << m << endl;
+	para << "initial_dormanicy\t" << init_dorm << endl;
+	para << "mut_prob_beta\t" << beta << endl;
+	para << "env_stoch_std\t" << env_std << endl;
+	para << "env_stoch_ac\t" << env_ac << endl;
+
+	para << "out_interval\t" << out_interval << endl;
+
+	para.close();
+}
+
 //---------------------------------------------------------------------------
-void outPop_header(double d) {
+void outPop_header(void) {
 	string name;
 
 	name = "Sim" + Int2Str(SimNr) + "_Pop.txt";

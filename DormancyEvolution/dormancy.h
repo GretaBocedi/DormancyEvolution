@@ -42,7 +42,7 @@ int init_x = 2;
 int init_y = 25;
 double K = 5.0; //carrying capacity
 int s = 5; //nr. seeds per plant
-int gamma = 10; //max. nr. of seeds per plant
+int gam = 10; //max. nr. of seeds per plant
 double d = 0.1; //dispersal probaibility
 double m = 0.05; //annual mortality rate of dormant seeds
 double beta = 0.01; //mutation probability
@@ -56,7 +56,7 @@ double fec = s;
 double eps = 0.0;
 
 string dir, dirOut;
-ofstream pop;
+ofstream pop, para;
 
 Population land[x_max][y_max];
 
@@ -68,7 +68,7 @@ Population land[x_max][y_max];
 std::random_device rd;
 std::mt19937 rdgen(rd());
 
-std::uniform_int_distribution<> sample_s(0, gamma);
+std::uniform_int_distribution<> sample_s(0, gam);
 std::uniform_real_distribution<> mutation(-0.1, 0.1);
 std::bernoulli_distribution disperse(d);
 std::bernoulli_distribution dorm_surv(1.0 - m);
@@ -83,5 +83,6 @@ void env_stoch(void);
 void reproduction(void);
 void dispersal(void);
 void survival(int, int);
-void outPop_header(double);
+void outPara(void);
+void outPop_header(void);
 void delete_landscape(void);
