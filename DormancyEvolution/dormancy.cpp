@@ -55,6 +55,14 @@ void RunModel(void) {
 	outPara();
 	outPop_header();
 
+	//std::uniform_int_distribution<> sample_s(0, gam);
+	std::uniform_real_distribution<> mutation(-0.1, 0.1);
+	std::bernoulli_distribution disperse(d);
+	std::bernoulli_distribution dorm_surv(1.0 - m);
+	std::bernoulli_distribution mutate(beta);
+	std::normal_distribution<> normEnv(0.0, env_std);
+
+
 	for (int r = 0; r < replicates; r++) {
 		cout << "------------------------------" << endl;
 		cout << "REP = " << r << endl;
@@ -68,15 +76,15 @@ void RunModel(void) {
 			if (g < expansion_start) x_m = x_max0;
 			else x_m = x_max;
 
-			if (stochasticity) env_stoch();
+			if (stochasticity) env_stoch(normEnv);
 
-			reproduction();
+			reproduction(mutate, mutation);
 			//cout << "rep_OK" << endl;
 
-			dispersal();
+			dispersal(disperse);
 			//cout << "disp_OK" << endl;
 
-			survival(r, g);
+			survival(r, g, dorm_surv);
 			//cout << "surv_OK" << endl;
 			//cout << "Ntot = " << Ntot << "  NseedsB = " << NseedsB_tot << endl;
 
@@ -115,7 +123,7 @@ void Initialise(void) {
 	}
 }
 //---------------------------------------------------------------------------
-void env_stoch(void)
+void env_stoch(std::normal_distribution<> normEnv)
 {
 	eps = eps * env_ac + normEnv(rdgen) * sqrt(1.0 - env_ac*env_ac);
 	fec = s * (1.0 + eps);
@@ -124,7 +132,7 @@ void env_stoch(void)
 }
 //---------------------------------------------------------------------------
 //Reproduction
-void reproduction(void) {
+void reproduction(std::bernoulli_distribution mut, std::uniform_real_distribution<> mutation) {
 
 	int minN = 0;
 
@@ -133,7 +141,7 @@ void reproduction(void) {
 	for (int x = 0; x < x_m; x++) {
 		for (int y = 0; y < y_max; y++) {
 			if (land[x][y].N > minN) {
-				land[x][y].reproduce((int)fec, x, y, dorm_evol, mutate, mutation);
+				land[x][y].reproduce((int)fec, x, y, dorm_evol, mut, mutation);
 			}
 			land[x][y].N = 0; //adult plants die
 			land[x][y].inds.clear();
@@ -141,7 +149,7 @@ void reproduction(void) {
 	}
 }
 //---------------------------------------------------------------------------
-void dispersal(void) {
+void dispersal(std::bernoulli_distribution disperse) {
 	int new_x, new_y;
 
 	for (int x = 0; x < x_m; x++) {
@@ -171,7 +179,7 @@ void dispersal(void) {
 }
 //---------------------------------------------------------------------------
 //germination and survival
-void survival(int rr, int gg) {
+void survival(int rr, int gg, std::bernoulli_distribution dorm_surv) {
 
 	int Nseed = 0;
 	int Nseedlings = 0;

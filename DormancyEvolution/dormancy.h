@@ -68,21 +68,15 @@ Population land[x_max][y_max];
 std::random_device rd;
 std::mt19937 rdgen(rd());
 
-std::uniform_int_distribution<> sample_s(0, gam);
-std::uniform_real_distribution<> mutation(-0.1, 0.1);
-std::bernoulli_distribution disperse(d);
-std::bernoulli_distribution dorm_surv(1.0 - m);
-std::bernoulli_distribution mutate(beta);
-std::normal_distribution<> normEnv(0.0, env_std);
 
 
 //Declaring functions
 void RunModel(void);
 void Initialise(void);
-void env_stoch(void);
-void reproduction(void);
-void dispersal(void);
-void survival(int, int);
+void env_stoch(std::normal_distribution<> normEnv);
+void reproduction(std::bernoulli_distribution, std::uniform_real_distribution<>);
+void dispersal(std::bernoulli_distribution);
+void survival(int, int, std::bernoulli_distribution);
 void outPara(void);
 void outPop_header(void);
 void delete_landscape(void);
