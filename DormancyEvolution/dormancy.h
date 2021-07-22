@@ -32,12 +32,14 @@ const int x_max0 = 50;
 bool dorm_evol = false;
 bool Allee = false;
 bool stochasticity = false;
+bool limit_outputs = false;
 
 int SimNr = 2;
 int replicates = 10;
 int years = 1000; //generations
 int expansion_start = 0; //before expansions start dispersal is restricted in 50 x 50 grid
-int out_interval = 5;
+int out_interval = 1;
+int outT_interval = 5;
 int init_x = 2;
 int init_y = 25;
 double K = 25.0; //carrying capacity
@@ -56,7 +58,7 @@ double fec = s;
 double eps = 0.0;
 
 string dir, dirOut;
-ofstream pop, para;
+ofstream pop, para, trait;
 
 Population land[x_max][y_max];
 
@@ -79,4 +81,5 @@ void dispersal(std::bernoulli_distribution);
 void survival(int, int, std::bernoulli_distribution);
 void outPara(void);
 void outPop_header(void);
+void outTrait_header(void);
 void delete_landscape(void);

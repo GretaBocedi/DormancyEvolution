@@ -33,12 +33,14 @@ void Population::reproduce(int fec, int xx, int yy, bool evol, std::bernoulli_di
 	}
 }
 //---------------------------------------------------------------------------
-void Population::outPop(bool evol, int r, int g, int x, int y, std::ofstream *pop) {
+void Population::outPop(int r, int g, int x, int y, std::ofstream *pop) {
 
-	*pop << r << "\t" << g << "\t" << x << "\t" << y << "\t" << N << "\t" << NseedsB;
+	*pop << r << "\t" << g << "\t" << x << "\t" << y << "\t" << N << "\t" << NseedsB << endl;
 
-	if (evol) *pop << "\t" << mean_dorm << "\t" << std_dorm;
+}
+//---------------------------------------------------------------------------
+void Population::outTrait(int r, int g, int x, int y, std::ofstream* pop) {
 
-	*pop << endl;
+	*pop << r << "\t" << g << "\t" << x << "\t" << y << "\t" << mean_dorm << "\t" << std_dorm << endl;
 
 }

@@ -24,7 +24,8 @@ public:
 	vector<Individual> seedsB_tmp;
 
 	void reproduce(int, int, int, bool, std::bernoulli_distribution, std::uniform_real_distribution<>);
-	void outPop(bool, int, int, int, int, std::ofstream*);
+	void outPop(int, int, int, int, std::ofstream*);
+	void outTrait(int, int, int, int, std::ofstream*);
 
 private:
 };

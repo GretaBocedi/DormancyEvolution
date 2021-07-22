@@ -21,6 +21,9 @@ int main(int argc, char* argv[])
 	stochasticity = std::atoi(argv[8]);
 	env_std = std::atof(argv[9]);
 	env_ac = std::atof(argv[10]);
+	K = std::atof(argv[11]);
+	m = std::atof(argv[12]);
+	limit_outputs = std::atoi(argv[13]);
 
 
 	RunModel();
@@ -50,10 +53,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 void RunModel(void) {
 
-	int p;
-
 	outPara();
 	outPop_header();
+	if (dorm_evol) outTrait_header();
 
 	//std::uniform_int_distribution<> sample_s(0, gam);
 	std::uniform_real_distribution<> mutation(-0.1, 0.1);
@@ -184,6 +186,7 @@ void survival(int rr, int gg, std::bernoulli_distribution dorm_surv) {
 	int Nseed = 0;
 	int Nseedlings = 0;
 	double ps = 0.0; //survival probability
+	int front_x = 0;
 
 	vector<Individual>::iterator iter;
 
@@ -222,6 +225,10 @@ void survival(int rr, int gg, std::bernoulli_distribution dorm_surv) {
 					}
 				}
 
+				if (Nseedlings > 0 || Nseed > 0) {
+					if (x > front_x) front_x = x;
+				}
+
 				land[x][y].seeds.clear();
 				land[x][y].seedsB.clear();
 				land[x][y].seedsB = land[x][y].seedsB_tmp;
@@ -242,11 +249,26 @@ void survival(int rr, int gg, std::bernoulli_distribution dorm_surv) {
 					land[x][y].mean_dorm /= land[x][y].N; //mean genotype
 				}
 
-				if (gg % out_interval == 0) land[x][y].outPop(dorm_evol, rr, gg, x, y, &pop);
+				if (limit_outputs == false) {
+					if (gg % out_interval == 0) land[x][y].outPop(rr, gg, x, y, &pop);
+					if (dorm_evol && gg % outT_interval == 0) land[x][y].outTrait(rr, gg, x, y, &trait);
+				}
 			}
 		}
 	}
 
+	if (limit_outputs && gg == 1500) {
+		for (int x = 0; x < x_m; x++) {
+			for (int y = 0; y < y_max; y++) {
+				if (x > front_x - 5 || (x > 24 && x < 30)) {
+					if (land[x][y].NseedsB > 0 || land[x][y].N > 0) {
+						land[x][y].outPop(rr, gg, x, y, &pop);
+						land[x][y].outTrait(rr, gg, x, y, &trait);
+					}
+				}
+			}
+		}
+	}
 }
 
 void outPara(void)
@@ -293,13 +315,20 @@ void outPop_header(void) {
 
 	pop.open(name.c_str());
 
-	if (dorm_evol) { //dormancy evolution
-		pop << "rep\tgen\tx\ty\tN\tNseedsB\tmean_dorm\tstd_dorm" << endl;
-	}
-	else { //fix dormancy
-		pop << "rep\tgen\tx\ty\tN\tNseedsB" << endl;
-	}
+	pop << "rep\tgen\tx\ty\tN\tNseedsB" << endl;
+
 }
+//---------------------------------------------------------------------------
+void outTrait_header(void) {
+	string name;
+
+	name = dirOut + "Sim" + Int2Str(SimNr) + "_Traits.txt";
+
+	trait.open(name.c_str());
+
+	trait << "rep\tgen\tx\ty\tmean_dorm\tstd_dorm" << endl;
+}
+
 //---------------------------------------------------------------------------
 void delete_landscape(void) {
 	for (int x = 0; x < x_max; x++) {
